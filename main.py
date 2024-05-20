@@ -40,32 +40,28 @@ for n in [10, 20]:
         fi_i = (2 * h * h * (X[i] ** 3 + 8)) / (2 + h * (X[i] ** 4))
         FI.append(fi_i)
         if i != 0:
-            c_i = (2 + h * (X[i] ** 4)) / (2 * h * h * (1 - X[i] ** 3) - 4 - (2 - h * (X[i] ** 4)) * C[i - 1])
+            c_i = 1 / (M[i] - R[i] * C[i - 1])
         else:
             c_i = c0
         C.append(c_i)
         if i != 0:
-            d_i = (2 * h * h * (X[i] ** 3 + 8) - (2 - h * (X[i] ** 4) * C[i - 1] * D[i - 1])) / (2 + h * (X[i] ** 4))
+            d_i = FI[i] - R[i] * C[i-1] * D[i-1]
         else:
             d_i = d0
         D.append(d_i)
-        # print(i, X[i], '\t', round(m_i, 5), round(r_i, 5), round(fi_i, 5), round(c_i, 5), round(d_i, 5), sep = '\t')
     for i in range(n, -1, -1):
         if i == n:
-            y_i = 0
-        elif i != 0:
-            y_i = (2 * h * h * (X[i] ** 3 + 8) - (2 - h * (X[i] ** 4)) * C[i - 1] * D[i - 1] - (2 + h * (X[i] ** 4)) *
-                   Y[0]) / (2 * h * h * (1 - X[i] ** 3) - 4 - (2 - h * (X[i] ** 4)) * C[i - 1])
-        if i == 0:
-            y_i = (h + Y[0]) / (h + 1)
+            y_i = (B * h + be0*C[n-1]*D[n-1]) / (be0*(C[n-1]+1)+be1*h)
+        else:
+            y_i = C[i] * (D[i] - Y[0])
         Y = [y_i] + Y
-    for i in range(n+1):
+    for i in range(n + 1):
         if i == 0:
             print('{}   {:.2f}  {:.4f}   {}   {}  {}  {:.4f}  {:.4f}'.format(i, X[i], Y[i], '      ', '      ',
-                                                                                       '     ', C[i], D[i]))
+                                                                             '     ', C[i], D[i]))
         elif i == n:
             print('{}  {:.2f}  {:.4f}   {}  {}  {}  {}  {}'.format(i, X[i], Y[i], '   ', '   ',
-                                                                                       '   ','   ', '   '))
+                                                                   '   ', '   ', '   '))
         elif i >= 10 and n == 20:
             print('{}  {:.2f}  {:.4f}   {:.4f}  {:.4f}  {:.4f}  {:.4f}  {:.4f}'.format(i, X[i], Y[i], M[i], R[i],
                                                                                        FI[i], C[i], D[i]))
@@ -73,7 +69,7 @@ for n in [10, 20]:
             print('{}  {:.2f}  {:.4f}  {:.4f}  {:.4f}  {:.4f}  {:.4f}  {:.4f}'.format(i, X[i], Y[i], M[i], R[i], FI[i],
                                                                                       C[i], D[i]))
         else:
-            if i >= 8 and n == 20:
+            if i >= 1 and n == 20:
                 print('{}   {:.2f}  {:.4f}   {:.4f}  {:.4f}  {:.4f}  {:.4f}  {:.4f}'.format(i, X[i], Y[i], M[i], R[i],
                                                                                             FI[i], C[i], D[i]))
             else:
